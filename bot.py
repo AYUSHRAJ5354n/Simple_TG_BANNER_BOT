@@ -5,10 +5,10 @@ from pyrogram.types import Message
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 # Bot configuration
-api_id = ""
-api_hash = ""
+api_id = "708575"
+api_hash = "431d3ae02dd51dd7c26ab9f9a08dae84"
 bot_token = ""
-forwarding_channel = "" 
+forwarding_channel = "-1002206233283" 
 # Initialize Pyrogram client
 app = Client("banner_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
