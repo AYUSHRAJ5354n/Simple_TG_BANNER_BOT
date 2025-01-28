@@ -16,7 +16,7 @@ app = Client("banner_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token
 user_states = {}
 
 # Timeout duration in seconds
-TIMEOUT_DURATION = 60
+TIMEOUT_DURATION = 600
 
 # Function to create banner
 def create_banner(data):
