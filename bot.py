@@ -10,7 +10,7 @@ api_hash = "431d3ae02dd51dd7c26ab9f9a08dae84"
 bot_token = "7972685797:AAFBRH_fST5MN6RtRrTh2U0gisqDAazAXaQ"
 forwarding_channel = "-1002206233283"
 
-TIMEOUT = 60 # 1 Minutes 
+TIMEOUT = 600 # 1 Minutes 
 
 # Initialize Pyrogram client
 app = Client("banner_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
