@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 # Bot configuration
 api_id = "708575"
 api_hash = "431d3ae02dd51dd7c26ab9f9a08dae84"
-bot_token = "7972685797:AAFBRH_fST5MN6RtRrTh2U0gisqDAazAXaQ"
+bot_token = "7937563107:AAFVvLlvKuSwDy6Go8zKOQu1vXRQA2FxAOo"
 forwarding_channel = "-1002206233283"
 
 TIMEOUT = 600 # 1 Minutes 
