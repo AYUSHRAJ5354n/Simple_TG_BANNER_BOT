@@ -10,7 +10,7 @@ api_hash = "431d3ae02dd51dd7c26ab9f9a08dae84"
 bot_token = "7937563107:AAFVvLlvKuSwDy6Go8zKOQu1vXRQA2FxAOo"
 forwarding_channel = "-1002206233283"
 
-TIMEOUT = 600  # 1 Minute
+TIMEOUT = 600 # 1 Minutes 
 
 # Initialize Pyrogram client
 app = Client("banner_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
@@ -25,11 +25,11 @@ def create_banner(data):
         main_image_path = data["main_image"]
         background_image_path = data["background_image"]
         title = data["title"]
-        studio = data["studio"]
+        media_type = data["media_type"]
         season = data["season"]
-        episodes = data["episodes"]
+        episode = data["episode"]
+        score = data["score"]
         rating = data["rating"]
-        genres = data["genres"]
 
         # Load images
         main_image = Image.open(main_image_path).convert("RGBA")
@@ -40,8 +40,8 @@ def create_banner(data):
         background_image = background_image.filter(ImageFilter.GaussianBlur(8))
 
         # Create a blank image for the banner
-        banner = Image.new("RGBA", (1280, 720), (50, 50, 50, 255))  # solid dark gray background
-        banner.paste(background_image, (0, 0), background_image)
+        banner = Image.new("RGBA", (1280, 720), (0, 0, 0, 0))
+        banner.paste(background_image, (0, 0))
 
         # Resize and create square-round shape for main image
         main_image = main_image.resize((500, 500))
@@ -51,44 +51,52 @@ def create_banner(data):
         main_image = Image.composite(main_image, Image.new("RGBA", main_image.size), mask)
 
         # Paste the main image onto the banner
-        banner.paste(main_image, (40, 110), main_image)
+        banner.paste(main_image, (640, 110), main_image)
 
         # Add text to the banner
         draw = ImageDraw.Draw(banner)
-        title_font = ImageFont.truetype("FenomenSans-SCNSemiBold.ttf", 60)  # large bold font for title
-        studio_font = ImageFont.truetype("FenomenSans-SCNSemiBold.ttf", 40)  # smaller font for studio
-        details_font = ImageFont.truetype("FenomenSans-SCNSemiBold.ttf", 35)  # smaller font for details
-        rating_font = ImageFont.truetype("FenomenSans-SCNSemiBold.ttf", 50)  # large font for rating
+        font = ImageFont.truetype("FenomenSans-SCNSemiBold.ttf", 40)
 
         # Define text colors
-        text_color = (255, 255, 255)
-        studio_color = (255, 0, 0)
-        rating_color = (255, 255, 255)
-        star_color = (255, 215, 0)
+        text_color = (0, 0, 0)
+        shadow_color = (50, 50, 50)
+        outline_color = (255, 255, 255)
 
-        # Title
-        draw.text((640, 50), title, fill=text_color, font=title_font, anchor="mm")
+        # Text lines
+        text_lines = [
+            f"{title}",
+            f"Type: {media_type}",
+            f"Season: {season}",
+            f"Episode: {episode}",
+            f"Score: {score}",
+            f"Rating: {rating}",
+        ]
 
-        # Studio
-        draw.text((640, 150), studio, fill=studio_color, font=studio_font, anchor="mm")
+        y_offset = (720 - len(text_lines) * 50) // 2 - 50
 
-        # Details (align left)
-        details_text = f"Season: {season}\nEpisodes: {episodes}"
-        draw.text((40, 650), details_text, fill=text_color, font=details_font, anchor="lm")
+        for line in text_lines:
+            bbox = draw.textbbox((0, 0), line, font=font)
+            width = bbox[2] - bbox[0]
+            height = bbox[3] - bbox[1]
+            x_position = (1280 - width) // 2 - 350
 
-        # Rating
-        draw.text((1080, 50), "★", fill=star_color, font=rating_font, anchor="mm")
-        draw.text((1120, 50), f"{rating}%", fill=rating_color, font=rating_font, anchor="lm")
+            # Draw shadow
+            draw.text((x_position + 4, y_offset + 4), line, font=font, fill=shadow_color)
 
-        # Genres (as buttons)
-        genre1, genre2 = genres.split(", ")
-        button_font = ImageFont.truetype("FenomenSans-SCNSemiBold.ttf", 35)
-        button_color = (50, 50, 50)
-        button_text_color = (255, 255, 255)
-        draw.rounded_rectangle((900, 150, 1050, 200), radius=10, fill=button_color)
-        draw.rounded_rectangle((1100, 150, 1250, 200), radius=10, fill=button_color)
-        draw.text((975, 175), genre1, fill=button_text_color, font=button_font, anchor="mm")
-        draw.text((1175, 175), genre2, fill=button_text_color, font=button_font, anchor="mm")
+            # Draw white outline
+            outline_width = 2
+            for x_offset in [-outline_width, 0, outline_width]:
+                for y_offset_outline in [-outline_width, 0, outline_width]:
+                    draw.text(
+                        (x_position + x_offset, y_offset + y_offset_outline),
+                        line,
+                        font=font,
+                        fill=outline_color,
+                    )
+
+            # Draw main text
+            draw.text((x_position, y_offset), line, font=font, fill=text_color)
+            y_offset += height + 40
 
         # Save the final image
         output_path = f"banner_{user_id}.png"
@@ -228,4 +236,4 @@ async def handle_inputs(client, message):
 # Run the bot
 if __name__ == "__main__":
     app.run()
-            
+        
